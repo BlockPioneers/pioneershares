@@ -19,7 +19,7 @@ P2PPORT : 8572
 Version Overview
 ===========================
 
-v1.0.0.1
+v1.0.0.2
 
 
 Blockexplorer in wallet
@@ -30,9 +30,13 @@ Stakereport
 
 Multisend
 
-Social Resources
+Resources links
 
 24hr Stakeweight graph
+
+24hr Stake difficulty graph
+
+Personal weight bar
 
 Check/repair gui
 
