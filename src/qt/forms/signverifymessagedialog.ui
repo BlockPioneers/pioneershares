@@ -48,7 +48,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
            <property name="toolTip">
-            <string>The address to sign the message with (e.g. CH1PFFgK3KtzaV9ce467nq5m5Vis1E4hZ)</string>
+            <string>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</string>
            </property>
            <property name="maxLength">
             <number>34</number>
@@ -152,7 +152,7 @@
            </property>
            <property name="icon">
             <iconset resource="../bitcoin.qrc">
-             <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
+             <normaloff>:/icons/edit2</normaloff>:/icons/edit2</iconset>
            </property>
            <property name="autoDefault">
             <bool>false</bool>
@@ -169,7 +169,7 @@
            </property>
            <property name="icon">
             <iconset resource="../bitcoin.qrc">
-             <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
+             <normaloff>:/icons/remove2</normaloff>:/icons/remove2</iconset>
            </property>
            <property name="autoDefault">
             <bool>false</bool>
@@ -251,7 +251,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
            <property name="toolTip">
-            <string>The address the message was signed with (e.g. CH1PFFgK3KtzaV9ce467nq5m5Vis1E4hZ)</string>
+            <string>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</string>
            </property>
            <property name="maxLength">
             <number>34</number>
@@ -298,7 +298,7 @@
            </property>
            <property name="icon">
             <iconset resource="../bitcoin.qrc">
-             <normaloff>:/icons/transaction_0</normaloff>:/icons/transaction_0</iconset>
+             <normaloff>:/icons/verify</normaloff>:/icons/verify</iconset>
            </property>
            <property name="autoDefault">
             <bool>false</bool>
@@ -315,7 +315,7 @@
            </property>
            <property name="icon">
             <iconset resource="../bitcoin.qrc">
-             <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
+             <normaloff>:/icons/remove2</normaloff>:/icons/remove2</iconset>
            </property>
            <property name="autoDefault">
             <bool>false</bool>

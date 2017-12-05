@@ -50,7 +50,7 @@
           <cursorShape>IBeamCursor</cursorShape>
          </property>
          <property name="text">
-          <string>&lt;b&gt;Pioneershares&lt;/b&gt; version</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pioneershares [PIO]&lt;/span&gt; version&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -91,12 +91,7 @@
         <cursorShape>IBeamCursor</cursorShape>
        </property>
        <property name="text">
-        <string>
-Copyright © 2009-2015 The Bitcoin developers&lt;br/&gt;
-Copyright © 2012-2016 The NovaCoin developers&lt;br/&gt;
-Copyright © 2015-2016 The Pioneershares developers&lt;br/&gt;&lt;br/&gt;
-Website: &lt;a href=&quot;http://www.pioneershares.info&quot;&gt;http://www.pioneershares.info&lt;/a&gt;
-       </string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright © 2009-2018 The Bitcoin developers&lt;br/&gt;Copyright © 2012-2018 The NovaCoin developers&lt;br/&gt;Copyright © 2016-2018 The Blockpioneers developers&lt;br/&gt;&lt;br/&gt;Official PIO Website: &lt;a href=&quot;https://www.blockpioneers.info/pioneershares&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#36916B;&quot;&gt;https://www.blockpioneers.info/pioneershares&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Developers Website: &lt;a href=&quot;https://www.blockpioneers.info&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#36916B;&quot;&gt;https://www.blockpioneers.info&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>

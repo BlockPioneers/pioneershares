@@ -67,7 +67,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+         <normaloff>:/icons/add2</normaloff>:/icons/add2</iconset>
        </property>
       </widget>
      </item>
@@ -81,7 +81,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
+         <normaloff>:/icons/editcopy2</normaloff>:/icons/editcopy2</iconset>
        </property>
       </widget>
      </item>
@@ -92,7 +92,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/qrcode</normaloff>:/icons/qrcode</iconset>
+         <normaloff>:/icons/qrcode2</normaloff>:/icons/qrcode2</iconset>
        </property>
       </widget>
      </item>
@@ -106,7 +106,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
+         <normaloff>:/icons/edit2</normaloff>:/icons/edit2</iconset>
        </property>
       </widget>
      </item>
@@ -120,7 +120,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/transaction_0</normaloff>:/icons/transaction_0</iconset>
+         <normaloff>:/icons/verify</normaloff>:/icons/verify</iconset>
        </property>
       </widget>
      </item>
@@ -134,7 +134,7 @@
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
+         <normaloff>:/icons/remove2</normaloff>:/icons/remove2</iconset>
        </property>
       </widget>
      </item>

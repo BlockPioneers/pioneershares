@@ -22,10 +22,8 @@ SplashScreen::SplashScreen(QWidget *parent) :
     QPixmap bgPixmap(screenWidth,300);
 
     QLinearGradient bgGradient(QPointF(0, 0), QPointF(screenWidth, 0));
-    bgGradient.setColorAt(0, QColor("#272727"));
-    //bgGradient.setColorAt(1, QColor("#7d0001"));
-	bgGradient.setColorAt(1, QColor("#272727"));
-    //#3c3c3b
+    bgGradient.setColorAt(0, QColor("#36916b"));
+	bgGradient.setColorAt(1, QColor("#36916b"));
 
     QRect rect_linear(0,0,screenWidth,300);
 
@@ -56,24 +54,24 @@ SplashScreen::SplashScreen(QWidget *parent) :
 
 
 
-    QFont smallFont; smallFont.setPixelSize(10);
+    QFont smallFont; smallFont.setPixelSize(12);
 
     versionLabel = new QLabel(this);
-    versionLabel->setStyleSheet("QLabel { background: transparent; color: #000000; }");
+    versionLabel->setStyleSheet("QLabel { background: transparent; color: #272727; }");
     versionLabel->setFont(smallFont);
     versionLabel->setText(QString::fromStdString(FormatFullVersion()).split("-")[0]);
     versionLabel->setFixedSize(1000,30);
-    versionLabel->move(screenWidth/2-10,220);
+	versionLabel->move(screenWidth/2-22,228);
 
 
-    QFont largeFont; largeFont.setPixelSize(16);
+    QFont largeFont; largeFont.setPixelSize(14);
 
     label = new QLabel(this);
     label->setStyleSheet("QLabel { background: transparent; color: #FFFFFF; }");
     label->setFont(largeFont);
     label->setText("...");
     label->setFixedSize(1000,30);
-    label->move(screenWidth/2-108,260);
+    label->move(screenWidth/2-56,260);
 
 }
 

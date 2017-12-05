@@ -1752,8 +1752,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Введите Pioneershares-адрес (например P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Введите Pioneershares-адрес (например PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1896,8 +1896,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Адрес получателя платежа (например P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to send the payment to  (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Адрес получателя платежа (например PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1926,8 +1926,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Введите Pioneershares-адрес (например P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Введите Pioneershares-адрес (например PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
 </context>
 <context>
@@ -1950,8 +1950,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Адрес, которым вы хотите подписать сообщение  (напр. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Адрес, которым вы хотите подписать сообщение  (напр. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2014,8 +2014,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Адрес, которым было подписано сообщение (напр. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Адрес, которым было подписано сообщение (напр. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2030,8 +2030,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Введите адрес Pioneershares (напр. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Введите адрес Pioneershares (напр. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="-2"/>

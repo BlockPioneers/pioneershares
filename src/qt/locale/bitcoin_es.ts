@@ -1769,8 +1769,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduce una dirección Pioneershares (p.ej. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduce una dirección Pioneershares (p.ej. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1913,8 +1913,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>La dirección a la que se quiere enviar el pago (p.ej. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to send the payment to  (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>La dirección a la que se quiere enviar el pago (p.ej. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1943,8 +1943,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduce una dirección Pioneershares (p.ej. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduce una dirección Pioneershares (p.ej. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
 </context>
 <context>
@@ -1967,8 +1967,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>La dirección a firmar con un mensaje (p.ej. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>La dirección a firmar con un mensaje (p.ej. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2031,8 +2031,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>La dirección firmada con un mensaje (p.ej. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>La dirección firmada con un mensaje (p.ej. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2047,8 +2047,8 @@ Esto significa que se requiere una cuota de al menos %2.</translation>
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduce una dirección Pioneershares (p.ej P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduce una dirección Pioneershares (p.ej PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="-2"/>

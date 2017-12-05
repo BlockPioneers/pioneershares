@@ -1765,8 +1765,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Zadajte Pioneershares adresu (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Zadajte Pioneershares adresu (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1909,8 +1909,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa pre poslanie platby (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to send the payment to  (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa pre poslanie platby (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1939,8 +1939,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Zadaj a Pioneershares addresu (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Zadaj a Pioneershares addresu (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
 </context>
 <context>
@@ -1963,8 +1963,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa na podpísanie správy (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa na podpísanie správy (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2027,8 +2027,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa správy bola podpísaná (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa správy bola podpísaná (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2043,8 +2043,8 @@ Sumy nižšie ako 0,546 násobok minimálneho poplatku sú zobrazené ako DUST.<
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Zadajte Pioneershares adresu (napr. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Zadajte Pioneershares adresu (napr. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="-2"/>

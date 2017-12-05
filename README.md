@@ -1,4 +1,3 @@
-
 Pioneershares Development Tree
 ===========================
 Pioneershares is an X11 PoW/PoS based cryptocurrency.
@@ -17,7 +16,7 @@ P2PPORT : 8572
 
 
 
-Update Overview
+Version Overview
 ===========================
 
 v1.0.0.1

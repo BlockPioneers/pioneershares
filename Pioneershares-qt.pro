@@ -5,7 +5,7 @@ INCLUDEPATH += src src/json src/qt
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE __STDC_FORMAT_MACROS __STDC_LIMIT_MACROS
 CONFIG += no_include_pwd
 CONFIG += thread
-CONFIG += static
+
 
 QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -56,9 +56,9 @@ QMAKE_LFLAGS *= -fstack-protector-all --param ssp-buffer-size=1
 # This can be enabled for Windows, when we switch to MinGW >= 4.4.x.
 }
 # for extra security on Windows: enable ASLR and DEP via GCC linker flags
-win32:QMAKE_LFLAGS *= -Wl,--large-address-aware -static
-win32:QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -static
-lessThan(QT_MAJOR_VERSION, 5): win32: QMAKE_LFLAGS *= -static
+win32:QMAKE_LFLAGS *= -Wl,--large-address-aware
+win32:QMAKE_LFLAGS += -static-libgcc -static-libstdc++  
+lessThan(QT_MAJOR_VERSION, 5): win32: QMAKE_LFLAGS *= 
 
 # use: qmake "USE_QRCODE=1"
 # libqrencode (http://fukuchi.org/works/qrencode/index.en.html) must be installed for support
@@ -135,7 +135,7 @@ SOURCES += src/txdb-leveldb.cpp \
         QMAKE_RANLIB = $$replace(QMAKE_STRIP, strip, ranlib)
     }
     LIBS += -lshlwapi
-    #genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
+    genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
 }
 genleveldb.target = $$PWD/src/leveldb/libleveldb.a
 genleveldb.depends = FORCE
@@ -231,6 +231,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/transactiondescdialog.h \
     src/qt/bitcoinamountfield.h \
     src/qt/blockbrowser.h \
+	src/qt/statisticspage.h \
 	src/qt/stakereportdialog.h \
     src/wallet.h \
     src/keystore.h \
@@ -238,7 +239,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/transactionview.h \
     src/qt/walletmodel.h \
     src/bitcoinrpc.h \
-	src/qt/charitydialog.h \
+	src/qt/multisenddialog.h \
     src/qt/overviewpage.h \
 	src/qt/qcustomplot.h \
     src/qt/csvmodelwriter.h \
@@ -317,6 +318,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/bitcoinstrings.cpp \
     src/qt/bitcoinamountfield.cpp \
     src/qt/blockbrowser.cpp \
+	src/qt/statisticspage.cpp \
 	src/qt/stakereportdialog.cpp \
     src/wallet.cpp \
     src/keystore.cpp \
@@ -343,7 +345,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/notificator.cpp \
     src/qt/qtipcserver.cpp \
     src/qt/rpcconsole.cpp \
-	src/qt/charitydialog.cpp \
+	src/qt/multisenddialog.cpp \
     src/noui.cpp \
     src/kernel.cpp \
     src/scrypt-arm.S \
@@ -368,8 +370,9 @@ FORMS += \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/blockbrowser.ui \
+	src/qt/forms/statisticspage.ui \
 	src/qt/forms/stakereportdialog.ui \
-	src/qt/forms/charitydialog.ui \
+	src/qt/forms/multisenddialog.ui \
     src/qt/forms/optionsdialog.ui
 
 contains(USE_QRCODE, 1) {

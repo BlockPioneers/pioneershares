@@ -208,13 +208,13 @@ void StakeReportDialog::updateStakeReport(bool fImmediate=false)
     ui->Stake_365D->setText(QString::number(aRange[i++].Count));
 
     ui->Amount_Last->setText(tr("Amount: ") + Coin_0Pad(nDisplayUnit, aRange[i].Total) + tr(" PIO"));
-    ui->L_LastStakeTime->setText(tr("Latest stake date: ") + HalfDate(aRange[i].Start, "hh:mm"));
+    ui->L_LastStakeTime->setText(tr("Latest Stake date: ") + HalfDate(aRange[i].Start, "hh:mm"));
 
     ui->Stake_Counted->setText(tr("Stakes analysed: ") + QString::number(nItemCounted));
     if (nItemCounted)
-        ui->TimeTook->setText(tr("Last Recalc took ") + QString::number(nTook) +  "ms");
+        ui->TimeTook->setText(tr("Last recalculation: ") + QString::number(nTook) +  "ms");
 
-    ui->TimeTook_2->setText(tr("Refresh took ") + QString::number(GetTimeMillis() -nTook2) +  "ms");
+    ui->TimeTook_2->setText(tr("Refreshed in: ") + QString::number(GetTimeMillis() -nTook2) +  "ms");
 
     string sRefreshType = disablereportupdate ? "Manual refresh" : "Auto refresh";
 

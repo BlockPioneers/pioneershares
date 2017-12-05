@@ -382,18 +382,18 @@ bool GetMyExternalIP(CNetAddr& ipRet)
         }
         else if (nHost == 2)
         {
-            addrConnect = CService("104.255.67.131", 80); // ip.truckcoin.net
+            addrConnect = CService("54.200.182.206", 80); // wtfismyip.com
 
             if (nLookup == 1)
-            {
-                CService addrIP("ip.truckcoin.net", 80, true);
+            {                
+                CService addrIP("wtfismyip.com", 80, true);
                 if (addrIP.IsValid())
                     addrConnect = addrIP;
             }
 
-            pszGet = "GET /simple/ HTTP/1.1\r\n"
-                     "Host: ip.truckcoin.net\r\n"
-                     "User-Agent: Pioneershares\r\n"
+            pszGet = "GET /text HTTP/1.1\r\n"
+                     "Host: wtfismyip.com\r\n"
+                     "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\r\n"
                      "Connection: close\r\n"
                      "\r\n";
 
@@ -1271,7 +1271,7 @@ void ThreadDNSAddressSeed2(void* parg)
 
 unsigned int pnSeed[] =
 {
-
+0x5388BD05, 0x3F46EB6D, 0xF45287C2,
 };
 
 void DumpAddresses()

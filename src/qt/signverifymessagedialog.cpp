@@ -24,10 +24,10 @@ SignVerifyMessageDialog::SignVerifyMessageDialog(QWidget *parent) :
 
 #if (QT_VERSION >= 0x040700)
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
-    ui->addressIn_SM->setPlaceholderText(tr("Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)"));
+    ui->addressIn_SM->setPlaceholderText(tr("Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)"));
     ui->signatureOut_SM->setPlaceholderText(tr("Click \"Sign Message\" to generate signature"));
 
-    ui->addressIn_VM->setPlaceholderText(tr("Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)"));
+    ui->addressIn_VM->setPlaceholderText(tr("Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)"));
     ui->signatureIn_VM->setPlaceholderText(tr("Enter Pioneershares signature"));
 #endif
 

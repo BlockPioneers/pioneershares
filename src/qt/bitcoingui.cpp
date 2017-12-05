@@ -11,7 +11,7 @@
 #include "signverifymessagedialog.h"
 #include "optionsdialog.h"
 #include "aboutdialog.h"
-#include "charitydialog.h"
+#include "multisenddialog.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "editaddressdialog.h"
@@ -20,6 +20,7 @@
 #include "addresstablemodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "statisticspage.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -29,7 +30,6 @@
 #include "wallet.h"
 #include "blockbrowser.h"
 #include "stakereportdialog.h"
-
 
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
@@ -82,11 +82,11 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     notificator(0),
     rpcConsole(0),
     blockBrowser(0),
-	stakeForCharityDialog(0)
+	multisendDialog(0)
 {
     updateStyle();
-    resize(1000, 740);
-    setWindowTitle(tr("Pioneershares") + " - " + tr("Wallet"));
+    resize(1000, 600);
+    setWindowTitle(tr("Pioneershares [PIO]") + " - " + (QString::fromStdString(FormatFullVersion()).split("-")[0]));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/bitcoin"));
     setWindowIcon(QIcon(":icons/bitcoin"));
@@ -111,6 +111,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     // Create tabs
     overviewPage = new OverviewPage();
+	statisticsPage = new StatisticsPage(this);
     blockBrowser = new BlockBrowser(this);
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -124,7 +125,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     sendCoinsPage = new SendCoinsDialog(this);
 	
-	stakeForCharityDialog = new StakeForCharityDialog(this);
+	multisendDialog = new MultisendDialog(this);
     
     signVerifyMessageDialog = new SignVerifyMessageDialog(this);
 
@@ -134,7 +135,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
     centralWidget->addWidget(sendCoinsPage);
-	centralWidget->addWidget(stakeForCharityDialog);
+	centralWidget->addWidget(statisticsPage);
+	centralWidget->addWidget(multisendDialog);
     centralWidget->addWidget(blockBrowser);
     setCentralWidget(centralWidget);
 
@@ -208,8 +210,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     blockBrowser = new BlockBrowser(this);
     connect(blockAction, SIGNAL(triggered()), blockBrowser, SLOT(show()));
 	
-	stakeForCharityDialog = new StakeForCharityDialog(this);
-    connect(charityAction, SIGNAL(triggered()), stakeForCharityDialog, SLOT(show()));
+	multisendDialog = new MultisendDialog(this);
+    connect(multisendAction, SIGNAL(triggered()), multisendDialog, SLOT(show()));
 
     // Clicking on "Verify Message" in the address book sends you to the verify message tab
     connect(addressBookPage, SIGNAL(verifyMessage(QString)), this, SLOT(gotoVerifyMessageTab(QString)));
@@ -217,8 +219,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     connect(receiveCoinsPage, SIGNAL(signMessage(QString)), this, SLOT(gotoSignMessageTab(QString)));
     // Clicking on "Block Explorer" in the transaction page sends you to the blockbrowser
     connect(transactionView, SIGNAL(blockBrowserSignal(QString)), this, SLOT(gotoBlockBrowser(QString)));
-	// Clicking on stake for charity button in the address book sends you to the multisend page
-    connect(addressBookPage, SIGNAL(stakeForCharitySignal(QString)), this, SLOT(charityClicked(QString)));
+	// Clicking on stake for multisend button in the address book sends you to the multisend page
+    connect(addressBookPage, SIGNAL(multisendSignal(QString)), this, SLOT(multisendClicked(QString)));
 
     gotoOverviewPage();
 }
@@ -240,8 +242,8 @@ void BitcoinGUI::createActions()
     overviewAction->setToolTip(tr("Show general overview of your wallet"));
     overviewAction->setCheckable(true);
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
-    tabGroup->addAction(overviewAction);
-
+    tabGroup->addAction(overviewAction);	
+	
     sendCoinsAction = new QAction(QIcon(":/icons/send2"), tr("&Send"), this);
     sendCoinsAction->setToolTip(tr("Send coins to a Pioneershares address"));
     sendCoinsAction->setCheckable(true);
@@ -265,7 +267,13 @@ void BitcoinGUI::createActions()
     addressBookAction->setCheckable(true);
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(addressBookAction);
-	    
+	
+    statisticsAction = new QAction(QIcon(":/icons/statistics"), tr("&Statistics"), this);
+    statisticsAction->setToolTip(tr("View statistics"));
+    statisticsAction->setCheckable(true);
+	statisticsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    tabGroup->addAction(statisticsAction);	
+	   
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -275,73 +283,61 @@ void BitcoinGUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));	
+    connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));		
     
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
-    quitAction->setToolTip(tr("Quit application"));
+    quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-	pioAction = new QAction(QIcon(":/icons/web"), tr("&Pioneershares Website"), this);
-	pioAction->setToolTip(tr("Visit the Official Pioneershares website"));
-	bitcointalkAction = new QAction(QIcon(":/icons/bitcointalk"), tr("&Bitcointalk Discussion"), this);
-	bitcointalkAction->setToolTip(tr("Visit the Bitcointalk Pioneershares discussion thread"));
-	twitterAction = new QAction(QIcon(":/icons/twitter"), tr("&@BlockPioneers"), this);
-	twitterAction->setToolTip(tr("Visit the Official Pioneershares Twitter"));	
-	chainAction = new QAction(QIcon(":/icons/explorer"), tr("&Blockchain Explorer"), this);
-	chainAction->setToolTip(tr("Visit the Official Pioneershares Blockchain Explorer"));	
-	githubAction = new QAction(QIcon(":/icons/github"), tr("&Github"), this);
-	githubAction->setToolTip(tr("Visit the Official Pioneershares Github"));	
     aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About Pioneershares"), this);
-    aboutAction->setToolTip(tr("Show information about Pioneershares"));
+    aboutAction->setStatusTip(tr("Show information about Pioneershares"));
     aboutAction->setMenuRole(QAction::AboutRole);
-    aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
-    aboutQtAction->setToolTip(tr("Show information about Qt"));
+    aboutQtAction = new QAction(QIcon(":/icons/qt"), tr("About &Qt"), this);
+    aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for Pioneershares"));
+    optionsAction->setStatusTip(tr("Modify configuration options for Pioneershares"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     toggleHideAction = new QAction(QIcon(":/icons/bitcoin"), tr("&Show / Hide"), this);
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
-    encryptWalletAction->setToolTip(tr("Encrypt or decrypt wallet"));
+    encryptWalletAction->setStatusTip(tr("Encrypt or decrypt wallet"));
     encryptWalletAction->setCheckable(true);
     backupWalletAction = new QAction(QIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
-    backupWalletAction->setToolTip(tr("Backup wallet to another location"));
+    backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
     changePassphraseAction = new QAction(QIcon(":/icons/key"), tr("&Change Passphrase..."), this);
-    changePassphraseAction->setToolTip(tr("Change the passphrase used for wallet encryption"));
+    changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
     unlockWalletAction = new QAction(QIcon(":/icons/lock_open"), tr("&Unlock Wallet..."), this);
-    unlockWalletAction->setToolTip(tr("Unlock wallet"));
+    unlockWalletAction->setStatusTip(tr("Unlock wallet"));
     lockWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Lock Wallet"), this);
-    lockWalletAction->setToolTip(tr("Lock wallet"));
+    lockWalletAction->setStatusTip(tr("Lock wallet"));
     signMessageAction = new QAction(QIcon(":/icons/edit"), tr("Sign &message..."), this);
-    verifyMessageAction = new QAction(QIcon(":/icons/transaction_0"), tr("&Verify message..."), this);
-
-	checkWalletAction = new QAction(QIcon(":/icons/transaction_confirmed"), tr("&Check Wallet..."), this);
+    verifyMessageAction = new QAction(QIcon(":/icons/verify"), tr("&Verify message..."), this);
+	checkWalletAction = new QAction(QIcon(":/icons/checkwallet"), tr("&Check Wallet..."), this);
 	checkWalletAction->setStatusTip(tr("Check wallet integrity and report findings"));
-
-	repairWalletAction = new QAction(QIcon(":/icons/options"), tr("&Repair Wallet..."), this);
-	repairWalletAction->setStatusTip(tr("Fix wallet integrity and remove orphans"));
-
-	
-	stakeReportAction = new QAction(QIcon(":/icons/stakejournal"), tr("Stake Journal"), this);
-    stakeReportAction->setToolTip(tr("Open the Stake Report Box"));
-
+	repairWalletAction = new QAction(QIcon(":/icons/repairwallet"), tr("&Repair Wallet..."), this);
+	repairWalletAction->setStatusTip(tr("Fix wallet integrity and remove orphans"));	
+	stakeReportAction = new QAction(QIcon(":/icons/stakejournal"), tr("Stake Report"), this);
+    stakeReportAction->setToolTip(tr("Open the Stake Report Box"));	
     exportAction = new QAction(QIcon(":/icons/export2"), tr("&Export..."), this);
-    exportAction->setToolTip(tr("Export the data in the current tab to a file"));
-    openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow2"), tr("&Debug window"), this);
-    openRPCConsoleAction->setToolTip(tr("Open debugging and diagnostic console"));
-	
+    exportAction->setStatusTip(tr("Export the data in the current tab to a file"));
+    openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow2"), tr("&Debug Window"), this);
+    openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));	
     blockAction = new QAction(QIcon(":/icons/blockbrowser2"), tr("&Block Browser"), this);
-    blockAction->setToolTip(tr("Explore the BlockChain"));
-	
-	charityAction = new QAction(QIcon(":/icons/multisend"), tr("&MultiSend"), this);
-    charityAction->setToolTip(tr("MultiSend Settings"));
+    blockAction->setToolTip(tr("Explore the BlockChain"));	
+	multisendAction = new QAction(QIcon(":/icons/multisend"), tr("&MultiSend"), this);
+    multisendAction->setToolTip(tr("MultiSend Settings"));	
+	resourcesPIOAction = new QAction(QIcon(":/icons/web-main"), tr("&Blockpioneers.info/pioneershares"), this);
+	resourcesPIOAction->setToolTip(tr("Visit the Official Pioneershares website"));
+	resourcesCHAINAction = new QAction(QIcon(":/icons/web-chain"), tr("&Blockchain Explorer"), this);
+	resourcesCHAINAction->setToolTip(tr("Visit the Official Pioneershares Blockchain Explorer"));				
+	resourcesTWITTERAction = new QAction(QIcon(":/icons/web-twitter"), tr("&Twitter"), this);
+	resourcesTWITTERAction->setToolTip(tr("Visit the Official Pioneershares Twitter"));
+	resourcesBTCTAction = new QAction(QIcon(":/icons/web-btct"), tr("&Discussion Forum"), this);
+	resourcesBTCTAction->setToolTip(tr("Visit the Pioneershares discussion forum on bitcointalk.org"));
+	resourcesYOBITAction = new QAction(QIcon(":/icons/web-yobit"), tr("&Yobit.net - PIO/BTC"), this);
+	resourcesYOBITAction->setToolTip(tr("Visit the Pioneershares market on Yobit.net"));
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-	connect(pioAction, SIGNAL(triggered()), this, SLOT(pioClicked()));
-	connect(bitcointalkAction, SIGNAL(triggered()), this, SLOT(bitcointalkClicked()));
-	connect(twitterAction, SIGNAL(triggered()), this, SLOT(twitterClicked()));
-	connect(chainAction, SIGNAL(triggered()), this, SLOT(chainClicked()));
-	connect(githubAction, SIGNAL(triggered()), this, SLOT(githubClicked()));	
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
@@ -355,8 +351,15 @@ void BitcoinGUI::createActions()
     connect(lockWalletAction, SIGNAL(triggered()), this, SLOT(lockWallet()));
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
+	connect(statisticsAction, SIGNAL(triggered()), this, SLOT(gotoStatisticsPage()));
     connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
 	connect(stakeReportAction, SIGNAL(triggered()), this, SLOT(stakeReportClicked()));
+	connect(resourcesPIOAction, SIGNAL(triggered()), this, SLOT(resourcesPIOClicked()));
+	connect(resourcesCHAINAction, SIGNAL(triggered()), this, SLOT(resourcesCHAINClicked()));;
+	connect(resourcesTWITTERAction, SIGNAL(triggered()), this, SLOT(resourcesTWITTERClicked()));		
+	connect(resourcesBTCTAction, SIGNAL(triggered()), this, SLOT(resourcesBTCTClicked()));
+	connect(resourcesYOBITAction, SIGNAL(triggered()), this, SLOT(resourcesYOBITClicked()));
+
 }
 
 void BitcoinGUI::createMenuBar()
@@ -390,22 +393,22 @@ void BitcoinGUI::createMenuBar()
     settings->addSeparator();
     settings->addAction(optionsAction);
 
+    QMenu *info = appMenuBar->addMenu(tr("&Info"));
+    info->addAction(openRPCConsoleAction);
+    info->addSeparator();
+    info->addAction(aboutAction);
+    info->addAction(aboutQtAction);
+	
+	QMenu *resources = appMenuBar->addMenu(tr("&Resources"));
+    resources->addAction(resourcesPIOAction);
+    resources->addAction(resourcesCHAINAction);
+    resources->addSeparator();
+    resources->addAction(resourcesTWITTERAction);
+    resources->addAction(resourcesBTCTAction);
+	resources->addSeparator();
+	resources->addAction(resourcesYOBITAction);
 
-    QMenu *resources = appMenuBar->addMenu(tr("&Resources"));
-    resources->addAction(pioAction);
-    resources->addAction(bitcointalkAction);
-    resources->addAction(twitterAction);	
-    resources->addSeparator();	
-    resources->addAction(chainAction);
-    resources->addSeparator();		
-    resources->addAction(githubAction);	
-
-    QMenu *help = appMenuBar->addMenu(tr("&Help"));
-    help->addAction(openRPCConsoleAction);
-    help->addSeparator();
-    help->addAction(aboutAction);
-    help->addAction(aboutQtAction);
-		
+	
 }
 
 static QWidget* makeToolBarSpacer()
@@ -422,51 +425,29 @@ void BitcoinGUI::createToolBars()
     mainIcon->setPixmap(QPixmap(":icons/logo"));
     mainIcon->show();
 	
-	// For another time
-	mainIcon2 = new QLabel (this);
-    mainIcon2->setPixmap(QPixmap(":icons/logo2"));
-    mainIcon2->show();
-	
 	QToolBar *toolbar2 = addToolBar(tr("Pioneershares top-logo"));
-	addToolBar(Qt::TopToolBarArea,toolbar2);
+	addToolBar(Qt::LeftToolBarArea,toolbar2);
     toolbar2->setOrientation(Qt::Horizontal);
     toolbar2->setFloatable(false);
     toolbar2->setMovable(false);
     toolbar2->addWidget(mainIcon);
-	
-    QToolBar *toolbar = addToolBar(tr("Top toolbar"));
-	addToolBar(Qt::TopToolBarArea,toolbar);
-    toolbar->setOrientation(Qt::Horizontal);
-	toolbar->setFloatable(false);
-    toolbar->setMovable(false);
-    toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    toolbar->addAction(overviewAction);
-    toolbar->addAction(sendCoinsAction);
-    toolbar->addAction(receiveCoinsAction);
-    toolbar->addAction(historyAction);
-    toolbar->addAction(addressBookAction);
 
     QToolBar *toolbar3 = addToolBar(tr("Side toolbar"));
 	addToolBar(Qt::LeftToolBarArea,toolbar3);
     toolbar3->setOrientation(Qt::Vertical);
 	toolbar3->setFloatable(false);
     toolbar3->setMovable(false);
-    toolbar3->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-   	toolbar3->addAction(stakeReportAction);
-	toolbar3->addAction(charityAction);	
-    toolbar3->addAction(blockAction);	
-    toolbar3->addAction(openRPCConsoleAction);
-    //toolbar3->addAction(exportAction);
-	
-	//For another time
-	QWidget *spacer = makeToolBarSpacer();
-	QToolBar *toolbar4 = addToolBar(tr("Pioneershares side-logo"));
-	addToolBar(Qt::LeftToolBarArea,toolbar4);
-    toolbar4->setOrientation(Qt::Vertical);
-    toolbar4->setFloatable(false);
-    toolbar4->setMovable(false);
-	toolbar4->addWidget(spacer);
-    toolbar4->addWidget(mainIcon2);
+    toolbar3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	toolbar3->addAction(overviewAction);
+    toolbar3->addAction(sendCoinsAction);
+    toolbar3->addAction(receiveCoinsAction);
+    toolbar3->addAction(historyAction);
+    toolbar3->addAction(addressBookAction);
+	toolbar3->addAction(statisticsAction);
+	toolbar3->addAction(multisendAction);	
+    toolbar3->addAction(blockAction);
+   	toolbar3->addAction(stakeReportAction);	
+	toolbar3->addAction(openRPCConsoleAction);
 	
 }
 
@@ -528,8 +509,8 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
         receiveCoinsPage->setModel(walletModel->getAddressTableModel());
         sendCoinsPage->setModel(walletModel);
         signVerifyMessageDialog->setModel(walletModel);
-		stakeForCharityDialog->setModel(walletModel);
-
+		multisendDialog->setModel(walletModel);
+		statisticsPage->setModel(clientModel);
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(updateStakingIcon()));
@@ -565,8 +546,11 @@ void BitcoinGUI::createTrayIcon()
     // Configuration of the tray icon (or dock icon) icon menu
     trayIconMenu->addAction(toggleHideAction);
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(overviewAction);
     trayIconMenu->addAction(sendCoinsAction);
-    trayIconMenu->addAction(receiveCoinsAction);
+    trayIconMenu->addAction(receiveCoinsAction);	
+    trayIconMenu->addAction(historyAction);
+    trayIconMenu->addAction(addressBookAction);	
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(signMessageAction);
     trayIconMenu->addAction(verifyMessageAction);
@@ -592,29 +576,12 @@ void BitcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 #endif
 
-void BitcoinGUI::pioClicked()
+double GetStrength(uint64_t nWeight)
 {
-    QDesktopServices::openUrl(QUrl("http://www.blockpioneers.info/shares"));
-}
-
-void BitcoinGUI::bitcointalkClicked()
-{
-    QDesktopServices::openUrl(QUrl("https://bitcointalk.org/index.php?topic=1511601.0"));
-}
-
-void BitcoinGUI::twitterClicked()
-{
-    QDesktopServices::openUrl(QUrl("https://twitter.com/BlockPioneers"));
-}
-
-void BitcoinGUI::chainClicked()
-{
-    QDesktopServices::openUrl(QUrl("http://chain.blockpioneers.info/pio"));
-}
-
-void BitcoinGUI::githubClicked()
-{
-    QDesktopServices::openUrl(QUrl("https://github.com/BlockPioneers/pioneershares"));
+    double networkWeight = GetPoSKernelPS();
+    if (nWeight == 0 && networkWeight == 0)
+        return 0;
+    return nWeight / (static_cast<double>(nWeight) + networkWeight);
 }
 
 void BitcoinGUI::optionsClicked()
@@ -633,12 +600,36 @@ void BitcoinGUI::aboutClicked()
     dlg.exec();
 }
 
-// Stake report dialog
 void BitcoinGUI::stakeReportClicked()
 {
    static StakeReportDialog dlg;
    dlg.setModel(walletModel);
    dlg.show();
+}
+
+void BitcoinGUI::resourcesPIOClicked()
+{
+     QDesktopServices::openUrl(QUrl("https://blockpioneers.info/pioneershares"));
+}
+
+void BitcoinGUI::resourcesCHAINClicked()
+{
+     QDesktopServices::openUrl(QUrl("https://blockpioneers.info/chains/pio/"));
+}
+
+void BitcoinGUI::resourcesTWITTERClicked()
+{
+     QDesktopServices::openUrl(QUrl("https://twitter.com/BlockPioneers"));
+}
+
+void BitcoinGUI::resourcesBTCTClicked()
+{
+     QDesktopServices::openUrl(QUrl("https://bitcointalk.org/index.php?topic=1511601.0"));
+}
+
+void BitcoinGUI::resourcesYOBITClicked()
+{
+     QDesktopServices::openUrl(QUrl("https://yobit.io/en/trade/PIO/BTC"));
 }
 
 void BitcoinGUI::setNumConnections(int count)
@@ -647,13 +638,17 @@ void BitcoinGUI::setNumConnections(int count)
     switch(count)
     {
     case 0: icon = ":/icons/connect_0"; break;
-    case 1: case 2: case 3: icon = ":/icons/connect_1"; break;
-    case 4: case 5: case 6: icon = ":/icons/connect_2"; break;
-    case 7: case 8: case 9: icon = ":/icons/connect_3"; break;
-    default: icon = ":/icons/connect_4"; break;
+    case 1: icon = ":/icons/connect_1"; break;
+    case 2: icon = ":/icons/connect_2"; break;
+    case 3: icon = ":/icons/connect_3"; break;
+	case 4: icon = ":/icons/connect_4"; break;
+    case 5: icon = ":/icons/connect_5"; break;
+    case 6: icon = ":/icons/connect_6"; break;
+	case 7: icon = ":/icons/connect_7"; break;
+    default: icon = ":/icons/connect_8"; break;
     }
     labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(28,54));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to the Pioneershares network", "", count));
+    labelConnectionsIcon->setToolTip(tr("PIO Network<br><br>Connections: <b>%n</b>", "", count));
 }
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
@@ -677,15 +672,15 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
 
         if (strStatusBarWarnings.isEmpty())
         {
-            progressBarLabel->setText(tr("Synchronizing with network..."));
+            progressBarLabel->setText(tr("Status: <b>Synchronizing</b>"));
             progressBarLabel->setVisible(false);
-            progressBar->setFormat(tr("Synchronizing with the Pioneershares network:   %n block(s) remaining", "", nRemainingBlocks));
+            progressBar->setFormat(tr("Status: Synchronizing - %n block(s) remaining", "", nRemainingBlocks));
             progressBar->setMaximum(nTotalBlocks);
             progressBar->setValue(count);
             progressBar->setVisible(true);
         }
 
-        tooltip = tr("Downloaded %1 of %2 blocks of transaction history (%3% done).").arg(count).arg(nTotalBlocks).arg(nPercentageDone, 0, 'f', 2);
+        tooltip = tr("Synchronized: <b>%1 of %2 blocks</b><br><br>Progress: <b>%3%</b>").arg(count).arg(nTotalBlocks).arg(nPercentageDone, 0, 'f', 2);
     }
     else
     {
@@ -693,7 +688,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
             progressBarLabel->setVisible(false);
 
         progressBar->setVisible(false);
-        tooltip = tr("Downloaded %1 blocks of transaction history.").arg(count);
+        tooltip = tr("Synchronized: <b>%1 Blocks</b><br>").arg(count);
     }
 
     // Override progressBarLabel text and hide progress bar, when we have warnings to display
@@ -715,32 +710,32 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
     }
     else if(secs < 60)
     {
-        text = tr("%n second(s) ago","",secs);
+        text = tr("%n Second(s) ago","",secs);
     }
     else if(secs < 60*60)
     {
-        text = tr("%n minute(s) ago","",secs/60);
+        text = tr("%n Minute(s) ago","",secs/60);
     }
     else if(secs < 24*60*60)
     {
-        text = tr("%n hour(s) ago","",secs/(60*60));
+        text = tr("%n Hour(s) ago","",secs/(60*60));
     }
     else
     {
-        text = tr("%n day(s) ago","",secs/(60*60*24));
+        text = tr("%n Day(s) ago","",secs/(60*60*24));
     }
 
     // Set icon state: spinning if catching up, tick otherwise
     if(secs < 90*60 && count >= nTotalBlocks)
     {
-        tooltip = tr("Up to date") + QString(".<br>") + tooltip;
+        tooltip = tr("Status: <b>Synced</b>") + QString("<br>") + tooltip;
         labelBlocksIcon->setPixmap(QIcon(":/icons/synced").pixmap(28,54));
 
         overviewPage->showOutOfSyncWarning(false);
     }
     else
     {
-        tooltip = tr("Catching up...") + QString("<br>") + tooltip;
+        tooltip = tr("Status: <b>Synchronizing</b>") + QString("<br>") + tooltip;
         labelBlocksIcon->setMovie(syncIconMovie);
         syncIconMovie->start();
 
@@ -750,7 +745,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
     if(!text.isEmpty())
     {
         tooltip += QString("<br>");
-        tooltip += tr("Last received block was generated %1.").arg(text);
+        tooltip += tr("Last Block : <b>%1</b>").arg(text);
     }
 
     // Don't word-wrap this (fixed-width) tooltip
@@ -759,19 +754,13 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
     labelBlocksIcon->setToolTip(tooltip);
     progressBarLabel->setToolTip(tooltip);
     progressBar->setToolTip(tooltip);
+
     if(GetBoolArg("-chart", true) && count > 0 && nTotalBlocks > 0)
     {
-        overviewPage->updatePlot(count);
+        statisticsPage->updatePlot();		
     }
+	overviewPage->updateOverview();
 }
-
-//double GetStrength(uint64_t nWeight)
-//{
-//    double networkWeight = GetPoSKernelPS();
-//    if (nWeight == 0 && networkWeight == 0)
-//        return 0;
-//    return nWeight / (static_cast<double>(nWeight) + networkWeight);
-//}
 
 void BitcoinGUI::updateStakingIcon()
 {
@@ -786,27 +775,27 @@ void BitcoinGUI::updateStakingIcon()
 
     if (pwalletMain && pwalletMain->IsLocked())
     {
-        labelStakingIcon->setToolTip(tr("Not minting because wallet is locked.<br>Network weight is %1.<br>MultiSend: %2").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Not Active")));
+        labelStakingIcon->setToolTip(tr("You are not staking:<br> <b>Your wallet is locked!</b><br><br>Pioneershares Network Weight: <b>%1</b><br><br>MultiSend: <b>%2</b>").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Inactive")));
         labelStakingIcon->setEnabled(false);
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(28,54));
     }
     else if (vNodes.empty())
     {
-        labelStakingIcon->setToolTip(tr("Not minting because wallet is offline.<br>Network weight is %1.<br>MultiSend: %2").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Not Active")));
+        labelStakingIcon->setToolTip(tr("You are not staking:<br> <b>Your wallet is offline!</b><br><br>Pioneershares Network Weight: <b>%1</b><br><br>MultiSend: <b>%2</b>").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Inactive")));
         labelStakingIcon->setEnabled(false);
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(28,54));
     }
     else if (IsInitialBlockDownload())
     {
-        labelStakingIcon->setToolTip(tr("Not minting because wallet is syncing.<br>Network weight is %1.<br>MultiSend: %2").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Not Active")));
+        labelStakingIcon->setToolTip(tr("You are not staking:<br> <b>Your wallet is syncing with the PIO network!</b><br><br>PIO Network Weight: <b>%1</b><br><br>MultiSend: <b>%2</b>").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Inactive")));
         labelStakingIcon->setEnabled(false);
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(28,54));
     }
     else if (!nWeight)
     {
-        labelStakingIcon->setToolTip(tr("Not minting because you don't have mature coins.<br>Network weight is %1<br>MultiSend: %2").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Not Active")));
+        labelStakingIcon->setToolTip(tr("You are not staking:<br> <b>You don't have mature coins!</b><br><br>PIO Network Weight: <b>%1</b><br><br>MultiSend: <b>%2</b>").arg(nNetworkWeight).arg(fMultiSend ? tr("Active"):tr("Inactive")));
         labelStakingIcon->setEnabled(false);
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(28,54));
     }
     else if (nLastCoinStakeSearchInterval)
     {	
@@ -818,34 +807,42 @@ void BitcoinGUI::updateStakingIcon()
         QString text;
         if (nEstimateTime < 60)
         {
-            text = tr("%1 - %2 seconds").arg(nRangeLow).arg(nRangeHigh);
+            text = tr("%1 - %2 Seconds").arg(nRangeLow).arg(nRangeHigh);
         }
         else if (nEstimateTime < 60*60)
         {
-            text = tr("%1 - %2 minutes").arg(nRangeLow / 60).arg(nRangeHigh / 60);
+            text = tr("%1 - %2 Minutes").arg(nRangeLow / 60).arg(nRangeHigh / 60);
         }
         else if (nEstimateTime < 24*60*60)
         {
-            text = tr("%1 - %2 hours").arg(nRangeLow / (60*60)).arg(nRangeHigh / (60*60));
+            text = tr("%1 - %2 Hours").arg(nRangeLow / (60*60)).arg(nRangeHigh / (60*60));
         }
         else
         {
-            text = tr("%1 - %2 days").arg(nRangeLow / (60*60*24)).arg(nRangeHigh / (60*60*24));
+            text = tr("%1 - %2 Days").arg(nRangeLow / (60*60*24)).arg(nRangeHigh / (60*60*24));
         }
 
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_on").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_on").pixmap(28,54));
         labelStakingIcon->setEnabled(true);
-        labelStakingIcon->setToolTip(tr("Minting.<br>Your weight is %1.<br>Network weight is %2.<br><b>Estimated</b> next stake in %3.<br>MultiSend: %4").arg(nWeight).arg(nNetworkWeight).arg(text).arg(fMultiSend ? tr("Active"):tr("Not Active")));
+		labelStakingIcon->setToolTip(tr("No issues detected:<br> <b>You are staking!</b><br><br>PIO Network Weight: <b>%1</b><br><br>My Wallet Weight: <b>%2</b><br><br>Estimated Next Stake: <b>%4</b><br><br>MultiSend: <b>%5</b>").arg(nNetworkWeight).arg(nWeight).arg(text).arg(fMultiSend ? tr("Active"):tr("Inactive")));
+		statisticsPage->setStrength(GetStrength(nWeight));
     }
     else
     {
-        labelStakingIcon->setToolTip(tr("Not minting.<br>Network weight is %1").arg(nNetworkWeight));
+        labelStakingIcon->setToolTip(tr("You are not staking!<br><br>PIO Network Weight: <b>%1</b>").arg(nNetworkWeight));
         labelStakingIcon->setEnabled(false);
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(28,54));
     }
 	
-	//overviewPage->setStrength(GetStrength(nWeight));
+}
 
+void BitcoinGUI::gotoStatisticsPage()
+{
+    statisticsAction->setChecked(true);
+    centralWidget->setCurrentWidget(statisticsPage);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
 
 void BitcoinGUI::error(const QString &title, const QString &message, bool modal)
@@ -1124,7 +1121,9 @@ void BitcoinGUI::setEncryptionStatus(int status)
     switch(status)
     {
     case WalletModel::Unencrypted:
-        labelEncryptionIcon->hide();
+        labelEncryptionIcon->show();
+		labelEncryptionIcon->setPixmap(QIcon(":/icons/not_encrypted").pixmap(28,54));
+        labelEncryptionIcon->setToolTip(tr("Your wallet is <b>not encrypted</b> and currently <b>unlocked</b>!<br><br>It is highly recommended to encrypt your wallet for safety purposes."));
         encryptWalletAction->setChecked(false);
         changePassphraseAction->setEnabled(false);
         unlockWalletAction->setVisible(false);
@@ -1133,8 +1132,8 @@ void BitcoinGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Unlocked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_open").pixmap(28,54));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
+        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_open_toolbar").pixmap(28,54));
+        labelEncryptionIcon->setToolTip(tr("Your wallet is <b>encrypted</b> and currently <b>unlocked</b>."));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
         unlockWalletAction->setVisible(false);
@@ -1143,8 +1142,8 @@ void BitcoinGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Locked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_closed").pixmap(28,54));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
+        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_closed_toolbar").pixmap(28,54));
+        labelEncryptionIcon->setToolTip(tr("Your wallet is <b>encrypted</b> and currently <b>locked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
         unlockWalletAction->setVisible(true);
@@ -1244,7 +1243,7 @@ void BitcoinGUI::updateStyle()
     if (!fUsePioneersharesTheme)
         return;
 
-    QString qssPath = QString::fromStdString( GetDataDir().string() ) + "/Pioneershares.qss";
+    QString qssPath = QString::fromStdString( GetDataDir().string() ) + "/Pioneershares_v1.0.0.2.qss";
 
     QFile f( qssPath );
 

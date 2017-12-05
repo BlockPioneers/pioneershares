@@ -1764,8 +1764,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Syötä Pioneershares-osoite (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Syötä Pioneershares-osoite (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1908,8 +1908,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Osoite, johon maksu lähetetään (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to send the payment to  (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Osoite, johon maksu lähetetään (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1938,8 +1938,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Syötä Pioneershares-osoite (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Syötä Pioneershares-osoite (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
 </context>
 <context>
@@ -1962,8 +1962,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Osoite, jolle viesti kirjataan (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Osoite, jolle viesti kirjataan (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2026,8 +2026,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Osoite, jolla viesti on allekirjoitettu (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ) </translation>
+        <source>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Osoite, jolla viesti on allekirjoitettu (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA) </translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2042,8 +2042,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Syötä Pioneershares-osoite (esim. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Syötä Pioneershares-osoite (esim. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="-2"/>

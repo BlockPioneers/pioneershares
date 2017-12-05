@@ -16,8 +16,10 @@ class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
 class RPCConsole;
+class StatisticsPage;
 class BlockBrowser;
-class StakeForCharityDialog;
+class MultisendDialog;
+class ChatWindow;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -62,6 +64,7 @@ private:
     WalletModel *walletModel;
 
     QStackedWidget *centralWidget;
+	StatisticsPage *statisticsPage;
 
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
@@ -69,13 +72,8 @@ private:
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
-
     
-	QLabel *mainIcon;
-	
-	// For another time
-	QLabel *mainIcon2;	
-    
+	QLabel *mainIcon;    
 	QLabel *labelEncryptionIcon;
     QLabel *labelStakingIcon;
     QLabel *labelConnectionsIcon;
@@ -103,14 +101,16 @@ private:
     QAction *lockWalletAction;
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
-	QAction *pioAction;
-	QAction *bitcointalkAction;
-	QAction *twitterAction;
-	QAction *chainAction;	
-	QAction *githubAction;	
     QAction *blockAction;
-	QAction *stakeReportAction;
-	QAction *charityAction;
+	QAction *stakeReportAction;	
+	QAction *multisendAction;
+	QAction *resourcesPIOAction;
+	QAction *resourcesCHAINAction;
+	QAction *resourcesTWITTERAction;	
+	QAction *resourcesBTCTAction;
+	QAction *resourcesYOBITAction;	
+
+	QAction *statisticsAction;
 	QAction *checkWalletAction;
 	QAction *repairWalletAction;
     
@@ -119,7 +119,7 @@ private:
     TransactionView *transactionView;
     RPCConsole *rpcConsole;
     BlockBrowser *blockBrowser;
-	StakeForCharityDialog *stakeForCharityDialog;
+	MultisendDialog *multisendDialog;
 
     QMovie *syncIconMovie;
     QMovie *stakingOnMovie;
@@ -180,18 +180,20 @@ private slots:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
-
+	 
+	/** Switch to Statistics page */
+	void gotoStatisticsPage();	 
+	
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */
     void aboutClicked();
-
-    /** Websites */	
-	void pioClicked();	
-	void bitcointalkClicked();
-	void twitterClicked();	
-	void chainClicked();
-	void githubClicked();	
+	
+	void resourcesPIOClicked();	
+	void resourcesCHAINClicked();	
+	void resourcesTWITTERClicked();
+	void resourcesBTCTClicked();
+	void resourcesYOBITClicked();
 	
 #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
@@ -219,8 +221,7 @@ private slots:
 	/** Check the wallet */
 	void checkWallet();
 	/** Repair the wallet */
-	void repairWallet();
- 
+	void repairWallet(); 
 
     /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
     void showNormalIfMinimized(bool fToggleHidden = false);
@@ -228,7 +229,7 @@ private slots:
     void toggleHidden();
     
     void updateStakingIcon();
-	//void charityClicked(QString addr = "");
+	//void multisendClicked(QString addr = "");
     void updateStyleSlot();
 };
 

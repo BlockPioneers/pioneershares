@@ -44,4 +44,4 @@ private:
     QMainWindow *mainWindow;
 };
 
-#endif // MACDOCKICONPIOHANDLER_H
+#endif // MACDOCKICONMARHANDLER_H

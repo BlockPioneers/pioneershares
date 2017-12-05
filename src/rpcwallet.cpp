@@ -2183,8 +2183,7 @@ Value multisend(const Array &params, bool fHelp)
         throw runtime_error(
 			"multisend <command>\n"
 			"****************************************************************\n"
-			"WHAT IS MULTISEND?\n"
-			"MultiSend is a rebuild of what used to be called Stake For Charity (s4c)\n"
+			"WHAT IS MULTISEND?\n"			
 			"MultiSend allows a user to automatically send a percent of their stake reward to as many addresses as you would like\n"
 			"The MultiSend transaction is sent when the staked coins mature\n"
 			"The only current restriction is that you cannot choose to send more than 100% of your stake using MultiSend\n"

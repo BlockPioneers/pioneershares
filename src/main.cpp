@@ -36,18 +36,18 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
-CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
+CBigNum bnProofOfWorkLimit(~uint256(0) >> 20);
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
 CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 16);
 
-static const int64_t nTargetTimespan = 60 * 60;  // 60m
-unsigned int nTargetSpacing = 3 * 60; // 1 minute blocks
+static const int64_t nTargetTimespan = 60 * 60;
+unsigned int nTargetSpacing = 3 * 60; 
 static const int64_t nInterval = nTargetTimespan / nTargetSpacing;
 static const int64_t nDiffChangeTarget = 1;
 
-unsigned int nStakeMinAge = 6 * 60 * 60; // 4 hours
-unsigned int nStakeMaxAge = 128 * 24 * 60 * 60;  // 128 days
-unsigned int nModifierInterval = 10 * 60; // Time to elapse before new modifier is computed
+unsigned int nStakeMinAge = 6 * 60 * 60; 
+unsigned int nStakeMaxAge = 128 * 24 * 60 * 60;
+unsigned int nModifierInterval = 10 * 60;
 
 int nCoinbaseMaturity = 16;
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -60,7 +60,7 @@ uint256 hashBestChain = 0;
 CBlockIndex* pindexBest = NULL;
 int64_t nTimeBestReceived = 0;
 
-CMedianFilter<int> cPeerBlockCounts(5, 0); // Amount of blocks that other nodes claim to have
+CMedianFilter<int> cPeerBlockCounts(5, 0); 
 
 map<uint256, CBlock*> mapOrphanBlocks;
 multimap<uint256, CBlock*> mapOrphanBlocksByPrev;
@@ -991,6 +991,7 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
 
     return nSubsidy + nFees;
 }
+
 
 //
 // maximum nBits value could possible be required nTime after
@@ -2448,7 +2449,7 @@ bool LoadBlockIndex(bool fAllowNew)
     //
     // Init with genesis block
     //
-    if (mapBlockIndex.empty())
+if (mapBlockIndex.empty())
     {
         if (!fAllowNew)
             return false;
@@ -2472,21 +2473,7 @@ bool LoadBlockIndex(bool fAllowNew)
         {
             block.nNonce   = 0;
         }
-        if (false  && (block.GetHash() != hashGenesisBlock)) {
 
-        // This will figure out a valid hash and Nonce if you're
-        // creating a different genesis block:
-            uint256 hashTarget = CBigNum().SetCompact(block.nBits).getuint256();
-            while (block.GetHash() > hashTarget)
-               {
-                   ++block.nNonce;
-                   if (block.nNonce == 0)
-                   {
-                       printf("NONCE WRAPPED, incrementing time");
-                       ++block.nTime;
-                   }
-               }
-        }
         block.print();
         printf("block.GetHash() == %s\n", block.GetHash().ToString().c_str());
         printf("block.hashMerkleRoot == %s\n", block.hashMerkleRoot.ToString().c_str());
@@ -2495,8 +2482,7 @@ bool LoadBlockIndex(bool fAllowNew)
 
         assert(block.hashMerkleRoot == uint256("0x1543dc4363f9035bd61237bb473067d7c8f7b1c3681b29855f60608c53b96c65"));
         
-
-	    block.print();
+		block.print();
         assert(block.GetHash() == (!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
         assert(block.CheckBlock());
 

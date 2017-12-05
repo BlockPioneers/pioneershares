@@ -9,18 +9,24 @@
 #include "guiutil.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
-
 #include "main.h"
+#include "wallet.h"
+#include "init.h"
+#include "base58.h"
+#include "clientmodel.h"
 #include "bitcoinrpc.h"
 #include "util.h"
 
-double GetPoSKernelPS(const CBlockIndex* pindex);
+#include <sstream>
+#include <string>
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
 
-#define DECORATION_SIZE 64
-#define NUM_ITEMS 4
+#define DECORATION_SIZE 42
+#define NUM_ITEMS 5
+
+using namespace json_spirit;
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -57,22 +63,24 @@ public:
         {
             foreground = qvariant_cast<QColor>(value);
         }
-foreground = QColor(51,51,51);
+foreground = QColor(167,169,169);
         painter->setPen(foreground);
         painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, address);
 
         if(amount < 0)
         {
-            foreground = COLOR_NEGATIVE;
+            foreground = option.palette.color(QPalette::Text);
+            foreground = QColor(217,119,119);
         }
         else if(!confirmed)
         {
-            foreground = COLOR_UNCONFIRMED;
+            foreground = option.palette.color(QPalette::Text);
+            foreground = QColor(214,214,214);
         }
         else
         {
             foreground = option.palette.color(QPalette::Text);
-            foreground = QColor(51,153,51);
+            foreground = QColor(54,145,107);
         }
         painter->setPen(foreground);
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true);
@@ -85,7 +93,7 @@ foreground = QColor(51,51,51);
         painter->setPen(option.palette.color(QPalette::Text));
         painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
-        painter->setPen(QColor(204,204,204));
+        painter->setPen(QColor(39,39,39));
         painter->drawLine(QPoint(mainRect.left(), mainRect.bottom()), QPoint(mainRect.right(), mainRect.bottom()));
         painter->drawLine(QPoint(amountRect.left()-6, mainRect.top()), QPoint(amountRect.left()-6, mainRect.bottom()));
         painter->restore();
@@ -125,32 +133,10 @@ OverviewPage::OverviewPage(QWidget *parent) :
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("Out of sync with the Pioneershares network") + ")");
     ui->labelTransactionsStatus->setText("(" + tr("Out of sync with the Pioneershares network") + ")");
-
+	ui->labelNetworkStatus->setText("(" + tr("Out of sync with the Pioneershares network") + ")");
+	
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
-    if(GetBoolArg("-chart", true))
-    {
-        // setup Plot
-        // create graph
-        ui->diffplot->addGraph();
-
-        // give the axes some labels:
-        ui->diffplot->xAxis->setLabel("Block Height");
-        ui->diffplot->yAxis->setLabel("24H Network Weight");
-
-        // set the pens
-        ui->diffplot->graph(0)->setPen(QPen(QColor(20, 129, 86)));
-        ui->diffplot->graph(0)->setLineStyle(QCPGraph::lsLine);
-
-        // set axes label fonts:
-        QFont label = font();
-        ui->diffplot->xAxis->setLabelFont(label);
-        ui->diffplot->yAxis->setLabelFont(label);
-    }
-    else
-    {
-        ui->diffplot->setVisible(false);
-    }
 }
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
@@ -164,80 +150,6 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::updatePlot(int count)
-{
-    static int64_t lastUpdate = 0;
-    // Double Check to make sure we don't try to update the plot when it is disabled
-    if(!GetBoolArg("-chart", true)) { return; }
-    if (GetTime() - lastUpdate < 180) { return; } // This is just so it doesn't redraw rapidly during syncing
-
-    if(fDebug) { printf("Plot: Getting Ready: pindexBest: %p\n", pindexBest); }
-    	
-		bool fProofOfStake = (nBestHeight > LAST_POW_BLOCK + 100);
-    if (fProofOfStake)
-        ui->diffplot->yAxis->setLabel("24H Network Weight");
-		else
-        ui->diffplot->yAxis->setLabel("Difficulty");
-
-    int numLookBack = 500;
-    double diffMax = 0;
-    const CBlockIndex* pindex = GetLastBlockIndex(pindexBest, fProofOfStake);
-    int height = pindex->nHeight;
-    int xStart = std::max<int>(height-numLookBack, 0) + 1;
-    int xEnd = height;
-
-    // Start at the end and walk backwards
-    int i = numLookBack-1;
-    int x = xEnd;
-
-    // This should be a noop if the size is already 2000
-    vX.resize(numLookBack);
-    vY.resize(numLookBack);
-
-    if(fDebug) {
-        if(height != pindex->nHeight) {
-            printf("Plot: Warning: nBestHeight and pindexBest->nHeight don't match: %d:%d:\n", height, pindex->nHeight);
-        }
-    }
-
-    if(fDebug) { printf("Plot: Reading blockchain\n"); }
-
-    const CBlockIndex* itr = pindex;
-    while(i >= 0 && itr != NULL)
-    {
-        if(fDebug) { printf("Plot: Processing block: %d - pprev: %p\n", itr->nHeight, itr->pprev); }
-        vX[i] = itr->nHeight;
-        if (itr->nHeight < xStart) {
-        	xStart = itr->nHeight;
-        }
-        vY[i] = fProofOfStake ? GetPoSKernelPS(itr) : GetDifficulty(itr);
-        diffMax = std::max<double>(diffMax, vY[i]);
-
-        itr = GetLastBlockIndex(itr->pprev, fProofOfStake);
-        i--;
-        x--;
-    }
-
-    if(fDebug) { printf("Plot: Drawing plot\n"); }
-
-    ui->diffplot->graph(0)->setData(vX, vY);
-
-    // set axes ranges, so we see all data:
-    ui->diffplot->xAxis->setRange((double)xStart, (double)xEnd);
-    ui->diffplot->yAxis->setRange(0, diffMax+(diffMax/10));
-
-    ui->diffplot->xAxis->setAutoSubTicks(false);
-    ui->diffplot->yAxis->setAutoSubTicks(false);
-    ui->diffplot->xAxis->setSubTickCount(0);
-    ui->diffplot->yAxis->setSubTickCount(0);
-
-    ui->diffplot->replot();
-
-    if(fDebug) { printf("Plot: Done!\n"); }
-    	
-    lastUpdate = GetTime();
-}
- 
 
 void OverviewPage::setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBalance, qint64 immatureBalance)
 {
@@ -250,6 +162,7 @@ void OverviewPage::setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBa
     ui->labelStake->setText(BitcoinUnits::formatWithUnit(unit, stake));
     ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedBalance));
     ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance));
+	ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balance + stake + unconfirmedBalance + immatureBalance));
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
@@ -258,199 +171,97 @@ void OverviewPage::setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBa
     ui->labelImmatureText->setVisible(showImmature);
 }
 
-/*
-void OverviewPage::setStrength(double strength)
-{
-    QString strFormat;
-    if (strength == 0)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 0;
-    }
-	 else if(strength < 0.01)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 1;
-    }
-	else if(strength < 0.02)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 2;
-    }
-	else if(strength < 0.03)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 3;
-    }
-	else if(strength < 0.04)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 4;
-    }
-	 else if(strength < 0.05)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 5;
-    }
-	else if(strength < 0.06)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 6;
-    }
-	else if(strength < 0.07)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 7;
-    }
-	else if(strength < 0.08)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 8;
-    }
-	else if(strength < 0.09)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 9;
-    }
-    else if(strength < 0.1)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 10;
-    }
-	else if(strength < 0.11)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 11;
-    }
-	else if(strength < 0.12)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 12;
-    }
-	else if(strength < 0.13)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 13;
-    }
-	else if(strength < 0.14)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 14;
-    }
-	else if(strength < 0.15)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 15;
-    }
-	else if(strength < 0.16)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 1;
-    }
-	else if(strength < 0.16)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 17;
-    }
-	else if(strength < 0.18)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 18;
-    }
-	else if(strength < 0.19)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 19;
-    }
-    else if (strength < 0.2)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 20;
-    }
-	else if(strength < 0.25)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 25;
-    }
-    else if (strength < 0.3)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 25;
-    }
-	else if(strength < 0.35)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 35;
-    }
-    else if (strength < 0.4)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 40;
-    }
-	else if(strength < 0.45)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 45;
-    }
-    else if (strength < 0.5)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 50;
-    }
-	else if(strength < 0.55)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 55;
-    }
-    else if (strength < 0.6)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 60;
-    }
-	else if(strength < 0.65)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 65;
-    }
-    else if (strength < 0.7)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 70;
-    }
-	else if(strength < 0.75)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 75;
-    }
-    else if (strength < 0.8)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 80;
-    }
-    else if (strength < 0.9)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 90;
-    }
-    else if (strength <= 1.0)
-    {
-        strFormat = "My Estimated Network Weight";
-        currentStrength = 100;
-    }
-    else
-    {
-        strFormat = "Error!";
-    }
-    ui->strengthBar->setValue(currentStrength);
-    ui->strengthBar->setFormat(strFormat);
-    ui->strengthBar->setTextVisible(true);
-}
-*/
-
 void OverviewPage::setNumTransactions(int count)
 {
     ui->labelNumTransactions->setText(QLocale::system().toString(count));
 }
+
+int heightPrevious = -1;
+int connectionPrevious = -1;
+int volumePrevious = -1;
+double netPawratePrevious = -1;
+double hardnessPrevious = -1;
+double hardnessPrevious2 = -1;
+int stakeminPrevious = -1;
+int stakemaxPrevious = -1;
+QString stakecPrevious = "";
+QString percPrevious = "";
+
+void OverviewPage::updateOverview()
+{
+	int unit = model->getOptionsModel()->getDisplayUnit();
+    double pHardness2 = GetDifficulty(GetLastBlockIndex(pindexBest, true));
+    int nHeight = pindexBest->nHeight;
+    uint64_t nNetworkWeight = GetPoSKernelPS();
+    double volume = pindexBest->nMoneySupply;
+    int peers = this->model2->getNumConnections();
+    QString height = QString::number(nHeight);
+    QString stakemax = QString::number(nNetworkWeight);
+    QString hardness2 = QString::number(pHardness2, 'f', 8);
+	QString Qlpawrate = model2->getLastBlockDate().toString();
+    QString QPeers = QString::number(peers);
+    QString qVolume = BitcoinUnits::formatWithUnit(unit, volume);
+	
+    if(nHeight > heightPrevious)
+    {
+        ui->heightBox->setText("" + height + "");
+    } else {
+    ui->heightBox->setText(height);
+    }
+
+    if(0 > stakemaxPrevious)
+    {
+        ui->maxBox->setText("" + stakemax + "");
+    } else {
+    ui->maxBox->setText(stakemax);
+    }
+
+    if(pHardness2 > hardnessPrevious2)
+    {
+        ui->diffBox2->setText("" + hardness2 + "");
+    } else if(pHardness2 < hardnessPrevious2) {
+        ui->diffBox2->setText("" + hardness2 + "");
+    } else {
+        ui->diffBox2->setText(hardness2);
+    }
+    	
+	if(Qlpawrate != pawratePrevious)
+    {
+        ui->localBox->setText("" + Qlpawrate + "");
+    } else {
+    ui->localBox->setText(Qlpawrate);
+    }
+
+    if(peers > connectionPrevious)
+    {
+        ui->connectionBox->setText("" + QPeers + "");             
+    } else if(peers < connectionPrevious) {
+        ui->connectionBox->setText("" + QPeers + "");        
+    } else {
+        ui->connectionBox->setText(QPeers);  
+    }
+
+    if(volume > volumePrevious)
+    {
+        ui->volumeBox->setText("" + qVolume + "");
+    } else if(volume < volumePrevious) {
+        ui->volumeBox->setText("" + qVolume + "");
+    } else {
+        ui->volumeBox->setText(qVolume);
+    }
+    updatePrevious(nHeight, nNetworkWeight, pHardness2, Qlpawrate, peers, volume);
+}
+
+void OverviewPage::updatePrevious(int nHeight, int nNetworkWeight, double pHardness2, QString Qlpawrate, int peers, double volume)
+{
+    heightPrevious = nHeight;	
+    stakemaxPrevious = nNetworkWeight;
+    hardnessPrevious2 = pHardness2;
+	pawratePrevious = Qlpawrate;
+    connectionPrevious = peers;
+    volumePrevious = volume;
+}
+
 
 void OverviewPage::setModel(WalletModel *model)
 {
@@ -478,7 +289,7 @@ void OverviewPage::setModel(WalletModel *model)
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
     }
 
-    // update the display unit, to not use the default ("PIO")
+    // update the display unit, to not use the default ("420")
     updateDisplayUnit();
 }
 
@@ -496,8 +307,15 @@ void OverviewPage::updateDisplayUnit()
     }
 }
 
+void OverviewPage::setModel2(ClientModel *model2)
+{
+    //updateStatistics();
+    this->model2 = model2;
+}
+
 void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
+	ui->labelNetworkStatus->setVisible(fShow);
 }

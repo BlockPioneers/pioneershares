@@ -305,11 +305,11 @@ void RPCConsole::clear()
     // Set default style sheet
     ui->messagesWidget->document()->setDefaultStyleSheet(
                 "table { }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { font-family: Monospace; font-size: 12px; } "
-                "td.cmd-request { color: #272727; } "
-                "td.cmd-error { color: red; } "
-                "b { color: #272727; } "
+                "td.time { color: #8a3232; padding-top: 3px; } "
+                "td.message { font-family: Monospace; font-size: 12px; color: #939393; } "
+                "td.cmd-request { color: #8a3232; } "
+                "td.cmd-error { color: #a66d68; } "
+                "b { color: #939393; } "
                 );
 
     message(CMD_REPLY, (tr("Welcome to the Pioneershares RPC console.") + "<br>" +

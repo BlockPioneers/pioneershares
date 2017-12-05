@@ -1766,8 +1766,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduceți o adresă Pioneershares(ex:P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduceți o adresă Pioneershares(ex:PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1910,8 +1910,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa catre care trimiteti plata(ex. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to send the payment to  (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa catre care trimiteti plata(ex. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1940,8 +1940,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduceți o adresă Pioneershares(ex:P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduceți o adresă Pioneershares(ex:PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
 </context>
 <context>
@@ -1964,8 +1964,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa cu care semnati mesajul(ex. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address to sign the message with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa cu care semnati mesajul(ex. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2028,8 +2028,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Adresa cu care a fost semnat mesajul(ex. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>The address the message was signed with (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Adresa cu care a fost semnat mesajul(ex. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2044,8 +2044,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a Pioneershares address (e.g. P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</source>
-        <translation>Introduceți o adresă Pioneershares(ex:P1O3GFgK3KtzaV9ce467nq5m5Vis1E4hZ)</translation>
+        <source>Enter a Pioneershares address (e.g. PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</source>
+        <translation>Introduceți o adresă Pioneershares(ex:PJrhdQEzvyJ5WzjaLMjP4nQaFyPUwAbSzA)</translation>
     </message>
     <message>
         <location line="-2"/>
